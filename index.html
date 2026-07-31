@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futbolchi Profili</title>
+    <style>
+        @import url('https://googleapis.com');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #11998e 0%, #f50808 100%);
+            overflow: hidden;
+        }
+
+        .card {
+            position: relative;
+            width: 350px;
+            padding: 30px;
+            background: rgb(0, 0, 0);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgb(255, 6, 6);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgb(255, 3, 3);
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2.title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 10px;
+            background: rgba(77, 4, 4, 0.644);
+            color: #ffffff;
+            font-size: 16px;
+            outline: none;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .input-box::placeholder { color: #eeeeee; }
+
+        /* Robot rasmi uchun doira konteyneri */
+        .profile-img-container {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin: 0 auto 15px auto;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .role {
+            font-size: 14px;
+            font-weight: 300;
+            color: #e0f7fa;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            background: rgba(10, 8, 160, 0.596);
+            border-radius: 12px;
+            padding: 15px;
+        }
+        .stat-box h3 { font-size: 18px; }
+        .stat-box p { font-size: 12px; color: #e0e0e0; }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 12px;
+            background: #ffffff;
+            color: #11998e;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+        .btn:hover { background: #eeeeee; transform: scale(1.02); }
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .overlay-text {
+            color: #38ef7d;
+            font-size: 36px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 30px; right: 40px;
+            color: #ffffff;
+            font-size: 40px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        
+        <!-- KIRISH PANELI -->
+        <div id="login-panel" class="panel active">
+            <h2 class="title">Tizimga kirish</h2>
+            <input type="text" id="login-name" class="input-box" placeholder="Ismingizni kiriting">
+            <button id="login-btn" class="btn">Kirish</button>
+        </div>
+
+        <!-- PROFIL PANELI -->
+        <div id="profile-panel" class="panel">
+            
+            <!-- Internetga bog'liq bo'lmagan, har doim ochiladigan SVG Robot rasmi 🤖 -->
+            <div class="profile-img-container">
+                <svg viewBox="0 0 100 100" width="100%" height="100%">
+                    <rect x="25" y="30" width="50" height="40" rx="10" fill="#00d2ff"/>
+                    <rect x="30" y="35" width="40" height="20" rx="5" fill="#2c3e50"/>
+                    <circle cx="42" cy="45" r="4" fill="#00d2ff"/>
+                    <circle cx="58" cy="45" r="4" fill="#00d2ff"/>
+                    <rect x="40" y="60" width="20" height="4" rx="2" fill="#2c3e50"/>
+                    <rect x="45" y="20" width="10" height="10" rx="2" fill="#7f8c8d"/>
+                    <line x1="50" y1="20" x2="50" y2="10" stroke="#7f8c8d" stroke-width="4"/>
+                    <circle cx="50" cy="8" r="4" fill="#e74c3c"/>
+                    <rect x="18" y="40" width="7" height="15" rx="3" fill="#7f8c8d"/>
+                    <rect x="75" y="40" width="7" height="15" rx="3" fill="#7f8c8d"/>
+                </svg>
+            </div>
+
+            <h2 class="name" id="display-name">Foydalanuvchi</h2>
+            <p class="role" id="display-role">Futbolchi</p>
+            
+            <div class="stats">
+                <div class="stat-box"><h3 id="stat-matches">0</h3><p>O'yinlar</p></div>
+                <div class="stat-box"><h3 id="stat-goals">0</h3><p>Gollar</p></div>
+                <div class="stat-box"><h3 id="stat-assists">0</h3><p>Assistent</p></div>
+            </div>
+            
+            <button id="open-overlay" class="btn">Ko'rish</button>
+            <button id="logout-btn" class="btn" style="background: rgba(255, 0, 0, 0.315); color: rgb(0, 84, 139);">Chiqish</button>
+        </div>
+
+    </div>
+
+    <!-- Qora e'lon foni -->
+    <div id="black-screen" class="overlay">
+        <span id="close-overlay" class="close-btn">&times;</span>
+        <h1 class="overlay-text">Yakshanba soat 7:40 da futbol</h1>
+    </div>
+
+    <script>
+        const players = {
+            "saydullo": { name: "Saydullo", role: "Hujumchi", matches: 5, goals: 100, assists: 6 },
+            "nodirbek": { name: "Nodirbek", role: "Hujumchi", matches: 0, goals: 0, assists: 0 },
+            "iqboljon": { name: "Iqboljon", role: "Himoyachi", matches: 0, goals: 0, assists: 0 },
+            "abdulloh": { name: "Abdulloh", role: "Himoyachi", matches: 0, goals: 0, assists: 0 },
+            "umudjon": { name: "Umudjon", role: "Yarim himoyachi", matches: 0, goals: 0, assists: 0 },
+            "varata": { name: "Varata", role: "Darvozabon", matches: 5, goals: -100, assists: 5 },
+            "alisher": { name: "Alisher", role: "Yarim himoyachi", matches: 0, goals: 0, assists: 0 }
+        };
+
+        const loginPanel = document.getElementById('login-panel');
+        const profilePanel = document.getElementById('profile-panel');
+        const loginInput = document.getElementById('login-name');
+
+        document.getElementById('login-btn').onclick = function() {
+            const inputName = loginInput.value.trim().toLowerCase();
+
+            if (inputName === "") {
+                alert("Iltimos, ismingizni kiriting!");
+                return;
+            }
+
+            if (players[inputName]) {
+                const currentPlayer = players[inputName];
+                
+                document.getElementById('display-name').textContent = currentPlayer.name;
+                document.getElementById('display-role').textContent = currentPlayer.role;
+                document.getElementById('stat-matches').textContent = currentPlayer.matches;
+                document.getElementById('stat-goals').textContent = currentPlayer.goals;
+                document.getElementById('stat-assists').textContent = currentPlayer.assists;
+
+                loginPanel.classList.remove('active');
+                profilePanel.classList.add('active');
+            } else {
+                alert("Bunday ismli foydalanuvchi topilmadi! Ro'yxatdagi ismlardan birini kiriting.");
+            }
+        };
+
+        document.getElementById('logout-btn').onclick = function() {
+            profilePanel.classList.remove('active');
+            loginPanel.classList.add('active');
+            loginInput.value = "";
+        };
+
+        const blackScreen = document.getElementById('black-screen');
+        document.getElementById('open-overlay').onclick = () => blackScreen.classList.add('active');
+        document.getElementById('close-overlay').onclick = () => blackScreen.classList.remove('active');
+    </script>
+</body>
+</html>
