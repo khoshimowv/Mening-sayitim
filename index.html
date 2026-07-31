@@ -71,7 +71,7 @@
         }
         .input-box::placeholder { color: #eeeeee; }
 
-        /* Robot rasmi uchun doira konteyneri */
+        
         .profile-img-container {
             width: 130px;
             height: 130px;
@@ -165,17 +165,16 @@
 
     <div class="card">
         
-        <!-- KIRISH PANELI -->
         <div id="login-panel" class="panel active">
             <h2 class="title">Tizimga kirish</h2>
             <input type="text" id="login-name" class="input-box" placeholder="Ismingizni kiriting">
             <button id="login-btn" class="btn">Kirish</button>
         </div>
 
-        <!-- PROFIL PANELI -->
+        
         <div id="profile-panel" class="panel">
             
-            <!-- Internetga bog'liq bo'lmagan, har doim ochiladigan SVG Robot rasmi 🤖 -->
+            
             <div class="profile-img-container">
                 <svg viewBox="0 0 100 100" width="100%" height="100%">
                     <rect x="25" y="30" width="50" height="40" rx="10" fill="#00d2ff"/>
@@ -206,7 +205,7 @@
 
     </div>
 
-    <!-- Qora e'lon foni -->
+    
     <div id="black-screen" class="overlay">
         <span id="close-overlay" class="close-btn">&times;</span>
         <h1 class="overlay-text">Yakshanba soat 7:40 da futbol</h1>
@@ -247,7 +246,7 @@
                 loginPanel.classList.remove('active');
                 profilePanel.classList.add('active');
             } else {
-                alert("Bunday ismli foydalanuvchi topilmadi! Ro'yxatdagi ismlardan birini kiriting.");
+                alert("Bunday ismli foydalanuvchi topilmadi! Ro'yxatdagi ismlardan birini kirit.");
             }
         };
 
